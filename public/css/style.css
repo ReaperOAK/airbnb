@@ -81,3 +81,15 @@ body{
     background-color: #ff385c !important;
     border: none !important;
 }
+/* show.ejs */
+.show-img{
+    height: 30vh;
+}
+.btns{
+    display: flex;
+    margin-bottom: 2rem;
+}
+.show-card{
+    padding-left: 0;
+    padding-right: 0;
+}
