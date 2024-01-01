@@ -93,3 +93,9 @@ body{
     padding-left: 0;
     padding-right: 0;
 }
+
+#map {
+    width: 90%;
+    height: 50vh;
+    border-radius: 1rem;
+}
