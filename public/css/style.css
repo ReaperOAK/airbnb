@@ -20,6 +20,12 @@ body{
     color: #222 !important;
 }
 /* footer */
+.f-info a{
+    text-decoration: none;
+    color: #222;
+    margin: 0 0.2rem;
+    
+}
 .f-info-links a{
     text-decoration: none;
     color: #222;
