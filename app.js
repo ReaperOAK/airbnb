@@ -12,6 +12,7 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/expressError.js");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -24,7 +25,7 @@ const listingRouter  = require("./routes/listing.js");
 const reviewRouter  = require("./routes/review.js");
 const userRouter  = require("./routes/user.js");
 
-const mongoUrl = "mongodb://127.0.0.1:27017/wanderlust";
+const mongoUrl = process.env.ATLASDB_URL;
 
 main().then(()=>{
     console.log("connected to DB");
@@ -43,8 +44,22 @@ app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
+
+const store = MongoStore.create({
+    mongoUrl : mongoUrl,
+    crypto : {
+        secret : process.env.SECRET,
+    },
+    touchAfter : 24*3600,
+});
+
+store.on("error",()=>{
+    console.log("ERROR in MONGO SESSION STORE", err);
+});
+
 const sessionOptions={
-    secret : "ReaperOAK",
+    store,
+    secret : process.env.SECRET,
     resave : false,
     saveUninitialized : true,
     cookie : {
@@ -53,6 +68,8 @@ const sessionOptions={
         httpOnly : true,
     },
 };
+
+
 
 
 app.get("/",(req,res)=>{
@@ -83,27 +100,12 @@ app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews/", reviewRouter);
 app.use("/", userRouter);
 
-// app.get("/testListing",async (req,res)=>{
-//     let sampleListing = new Listing({
-//         title : "my new Villa",
-//         description : "by the beach",
-//         price : 1200,
-//         location : "Calangute, Goa",
-//         country : "India",
-//     });
-
-//     await sampleListing.save();
-//     console.log("sample was saved");
-//     res.send("succesfful testing");
-// });
-
 app.all("*",(req,res,next)=>{
     next(new ExpressError(404,"Page Not Found!"));
 });
 
 app.use((err,req,res,next)=>{
     let {statusCode=500, message="something went wrong!"} = err;
-    // res.status(statusCode).send(message);
     res.status(statusCode).render("error.ejs",{message});
 });
 

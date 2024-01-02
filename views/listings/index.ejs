@@ -1,23 +1,4 @@
 <% layout("/layouts/boilerplate") %> 
-    <style>
-        .filters{
-            display: flex;
-            flex-wrap: wrap;
-        }
-        #filter{
-            text-align: center;
-            margin-right: 2rem;
-            margin-top: 2rem;
-            opacity: 0.7;
-        }
-        #filter:hover{
-            opacity: 1;
-            cursor: pointer;
-        }
-        #filter p{
-            font-size: 0.8rem;
-        }
-    </style>
     <div class="filters">
         <div id="filter">
             <div><i class="fa-solid fa-fire"></i></div>
@@ -55,6 +36,16 @@
             <div><i class="fa-solid fa-snowflake"></i></div>
             <p>Arctic</p>
         </div>
+        <div id="filter">
+            <div><i class="fa-solid fa-ship"></i></div>
+            <p>Boats</p>
+        </div>
+        <div class="tax-toggle">
+            <div class="form-check form-switch form-check-reverse">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckReverse">
+                <label class="form-check-label" for="flexSwitchCheckReverse">Display total after taxes</label>
+            </div>
+        </div>
     </div>
     <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
         <% for (let listing of allListings){ %>
@@ -67,9 +58,12 @@
                             <b><%= listing.title %></b>
                             <br>
                             &#8377;<%= listing.price.toLocaleString("en-IN") %> / night
+                            <i class="tax-info">&nbsp;&nbsp;+18% GST</i>
                         </p>
                     </div>
                 </div>
             </a>
         <% } %>
     </div>
+
+    <script src="/js/taxSwitch.js"></script>
